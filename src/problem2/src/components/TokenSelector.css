@@ -1,0 +1,459 @@
+.token-selector {
+  position: relative;
+  min-width: auto;
+  flex-shrink: 0;
+}
+
+.token-selector.error .token-selector-button {
+  border-color: var(--error);
+}
+
+.token-selector-button {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: var(--surface-light);
+  border: 2px solid var(--border);
+  border-radius: 16px;
+  padding: 12px 16px;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  width: 100%;
+  min-height: 56px;
+  justify-content: space-between;
+  position: relative;
+  overflow: hidden;
+}
+
+.token-icon-button {
+  justify-content: center;
+  padding: 8px;
+  min-height: auto;
+  width: auto;
+  aspect-ratio: 1;
+  border-radius: 50%;
+}
+
+.token-selector-button::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-radius: 50%;
+  background: rgba(99, 102, 241, 0.1);
+  transform: translate(-50%, -50%);
+  transition: width 0.4s, height 0.4s;
+}
+
+.token-selector-button:active::after {
+  width: 200px;
+  height: 200px;
+}
+
+.token-selector-button:hover {
+  border-color: var(--border-focus);
+  background: var(--surface);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.1);
+}
+
+.token-icon-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(99, 102, 241, 0.2);
+}
+
+.token-icon-button:active {
+  transform: translateY(0) scale(0.95);
+}
+
+.token-display {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex: 1;
+  min-width: 0;
+}
+
+.token-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+.token-icon-large {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.2s ease;
+}
+
+.token-icon-button:hover .token-icon-large {
+  transform: scale(1.1);
+}
+
+.token-placeholder-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+}
+
+.token-name-group {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+  text-align: left;
+}
+
+.token-symbol {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text-primary);
+  line-height: 1.2;
+}
+
+.token-name {
+  font-size: 12px;
+  color: var(--text-muted);
+  line-height: 1.2;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.token-placeholder {
+  font-size: 16px;
+  color: var(--text-muted);
+}
+
+.dropdown-arrow {
+  color: var(--text-secondary);
+  transition: transform 0.2s ease;
+  flex-shrink: 0;
+}
+
+.dropdown-arrow.open {
+  transform: rotate(180deg);
+}
+
+.token-dropdown {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 50%;
+  transform: translateX(-50%);
+  min-width: 320px;
+  width: max-content;
+  max-width: calc(100vw - 40px);
+  background: var(--surface);
+  border: 2px solid var(--border);
+  border-radius: 16px;
+  box-shadow: 0 10px 40px var(--shadow);
+  overflow: hidden;
+  animation: slideDown 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  max-height: 400px;
+  display: flex;
+  flex-direction: column;
+  backdrop-filter: blur(10px);
+}
+
+.token-dropdown.top-dropdown {
+  z-index: 10001;
+}
+
+.token-dropdown.bottom-dropdown {
+  z-index: 10000;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateX(-50%) translateY(-10px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0) scale(1);
+  }
+}
+
+.token-search {
+  padding: 12px;
+  border-bottom: 1px solid var(--border);
+}
+
+.search-input {
+  width: 100%;
+  background: var(--surface-light);
+  border: 2px solid var(--border);
+  border-radius: 12px;
+  padding: 10px 14px;
+  font-size: 14px;
+  color: var(--text-primary);
+  outline: none;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.search-input:hover {
+  border-color: var(--border-focus);
+  background: var(--surface);
+}
+
+.search-input:focus {
+  border-color: var(--border-focus);
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15);
+  background: var(--surface);
+  transform: translateY(-1px);
+}
+
+.search-input::placeholder {
+  color: var(--text-muted);
+}
+
+.token-list {
+  max-height: 300px;
+  overflow-y: auto;
+  padding: 8px;
+}
+
+.token-list::-webkit-scrollbar {
+  width: 6px;
+}
+
+.token-list::-webkit-scrollbar-track {
+  background: var(--surface-light);
+  border-radius: 3px;
+}
+
+.token-list::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 3px;
+}
+
+.token-list::-webkit-scrollbar-thumb:hover {
+  background: var(--text-muted);
+}
+
+.token-option {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 12px;
+  background: transparent;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  text-align: left;
+  position: relative;
+  overflow: hidden;
+}
+
+.token-option::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100%;
+  width: 3px;
+  background: var(--primary);
+  transform: scaleY(0);
+  transition: transform 0.2s ease;
+}
+
+.token-option:hover {
+  background: var(--surface-light);
+  transform: translateX(4px);
+  padding-left: 16px;
+}
+
+.token-option:hover::before {
+  transform: scaleY(1);
+}
+
+.token-option.selected {
+  background: rgba(99, 102, 241, 0.1);
+  padding-left: 16px;
+}
+
+.token-option.selected::before {
+  transform: scaleY(1);
+}
+
+.token-option:active {
+  transform: translateX(2px) scale(0.98);
+}
+
+.token-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+
+.token-option .token-name-group {
+  gap: 2px;
+}
+
+.token-option .token-symbol {
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+.token-option .token-name {
+  font-size: 12px;
+  color: var(--text-muted);
+  line-height: 1.2;
+}
+
+.token-option .token-price {
+  font-size: 12px;
+  color: var(--text-muted);
+  margin-top: 2px;
+}
+
+.check-icon {
+  color: var(--primary);
+  flex-shrink: 0;
+}
+
+.no-tokens {
+  padding: 24px;
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 14px;
+}
+
+.token-selector .error-message {
+  position: absolute;
+  bottom: -20px;
+  left: 0;
+  color: var(--error);
+  font-size: 12px;
+  white-space: nowrap;
+  z-index: 10;
+}
+
+/* Tablet styles */
+@media (max-width: 1024px) and (min-width: 641px) {
+  .token-selector {
+    min-width: 200px;
+  }
+
+  .token-dropdown {
+    max-height: 350px;
+  }
+}
+
+/* Mobile styles */
+@media (max-width: 640px) {
+  .token-selector {
+    min-width: auto;
+    width: auto;
+  }
+
+  .token-selector-button {
+    padding: 10px 12px;
+    min-height: 52px;
+    border-radius: 14px;
+  }
+
+  .token-icon-button {
+    padding: 6px;
+  }
+
+  .token-selector-button:hover {
+    transform: none; /* Disable hover transform on mobile */
+  }
+
+  .token-icon {
+    width: 28px;
+    height: 28px;
+  }
+
+  .token-icon-large {
+    width: 40px;
+    height: 40px;
+  }
+
+  .token-placeholder-icon {
+    width: 40px;
+    height: 40px;
+  }
+
+  .token-placeholder-icon svg {
+    width: 28px;
+    height: 28px;
+  }
+
+  .token-symbol {
+    font-size: 14px;
+  }
+
+  .token-name {
+    font-size: 11px;
+  }
+
+  .token-dropdown {
+    border-radius: 14px;
+    max-height: 60vh;
+    top: calc(100% + 6px);
+    min-width: 280px;
+    max-width: calc(100vw - 32px);
+  }
+
+  .token-option {
+    padding: 10px;
+    border-radius: 10px;
+  }
+
+  .token-option:hover {
+    transform: none; /* Disable hover transform on mobile */
+    padding-left: 12px;
+  }
+
+  .token-option.selected {
+    padding-left: 12px;
+  }
+
+  .search-input {
+    padding: 8px 12px;
+    font-size: 13px;
+    border-radius: 10px;
+  }
+
+  .search-input:focus {
+    transform: none; /* Disable focus transform on mobile */
+  }
+}
+
+/* Small mobile devices */
+@media (max-width: 375px) {
+  .token-selector-button {
+    padding: 8px 10px;
+    min-height: 48px;
+  }
+
+  .token-icon {
+    width: 24px;
+    height: 24px;
+  }
+
+  .token-symbol {
+    font-size: 13px;
+  }
+
+  .token-name {
+    font-size: 10px;
+  }
+}
+
