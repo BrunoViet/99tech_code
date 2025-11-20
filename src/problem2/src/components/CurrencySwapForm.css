@@ -312,9 +312,9 @@
 
 .balance-chip.floating {
   position: absolute;
-  top: 0;
-  left: 50%;
-  transform: translate(-50%, -110%);
+  top: -20px;
+  right: -15px;
+  transform: translateY(-50%);
   z-index: 5;
   pointer-events: auto;
   white-space: nowrap;
@@ -471,7 +471,8 @@
   }
 
   .balance-chip.floating {
-    transform: translate(-50%, -120%);
+    right: 12px;
+    transform: translateY(-60%);
   }
 
   .amount-input-wrapper {
