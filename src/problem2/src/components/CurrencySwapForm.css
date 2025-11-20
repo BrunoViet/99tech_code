@@ -1,6 +1,5 @@
 .swap-form-container {
-  width: 100%;
-  max-width: 520px;
+  width: min(640px, calc(100% - 32px));
   margin: 0 auto;
   padding: 20px;
   position: relative;
@@ -19,31 +18,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-}
-
-.swap-form-card::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: -100%;
   width: 100%;
-  height: 100%;
-  background: linear-gradient(
-    90deg,
-    transparent,
-    rgba(99, 102, 241, 0.1),
-    transparent
-  );
-  animation: shimmer 3s infinite;
-}
-
-@keyframes shimmer {
-  0% {
-    left: -100%;
-  }
-  100% {
-    left: 100%;
-  }
 }
 
 @keyframes slideUp {
@@ -94,6 +69,13 @@
   align-items: center;
 }
 
+.field-label-row {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  align-items: center;
+}
+
 .swap-field:first-of-type {
   z-index: 3;
 }
@@ -122,11 +104,23 @@
   max-width: 100%;
 }
 
+.token-selector-wrapper {
+  position: relative;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  padding-top: 20px;
+  flex-shrink: 0;
+}
+
+.amount-input-wrapper {
+  position: relative;
+  flex: 1;
+  width: 100%;
+}
+
 .amount-input {
-  flex: 0 1 auto;
-  min-width: 200px;
-  max-width: 300px;
-  width: auto;
+  width: 100%;
   background: var(--surface-light);
   border: 2px solid var(--border);
   border-radius: 16px;
@@ -165,6 +159,11 @@
   opacity: 0.8;
 }
 
+.amount-input.read-only {
+  background: var(--surface);
+  border-style: dashed;
+}
+
 .token-price {
   font-size: 12px;
   color: var(--text-muted);
@@ -198,6 +197,11 @@
   align-self: flex-start;
   width: 100%;
   text-align: left;
+  word-break: break-word;
+}
+
+.error-message.passive {
+  animation: none;
 }
 
 
@@ -266,6 +270,76 @@
   cursor: not-allowed;
   background: var(--surface-light);
   box-shadow: none;
+}
+
+.field-helper-row {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  min-height: 18px;
+}
+
+.helper-text {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.balance-chip {
+  font-size: 12px;
+  color: var(--text-secondary);
+  background: rgba(99, 102, 241, 0.08);
+  border-radius: 999px;
+  padding: 4px 12px;
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+}
+
+.balance-chip:hover {
+  border-color: var(--border-focus);
+  color: var(--text-primary);
+}
+
+.balance-chip.ghost {
+  cursor: default;
+  border-color: transparent;
+}
+
+.balance-chip.floating {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translate(-50%, -110%);
+  z-index: 5;
+  pointer-events: auto;
+  white-space: nowrap;
+}
+
+.balance-chip.floating.ghost {
+  pointer-events: none;
+}
+
+.max-button {
+  position: absolute;
+  top: 50%;
+  right: 12px;
+  transform: translateY(-50%);
+  background: transparent;
+  border: none;
+  color: var(--primary);
+  font-weight: 700;
+  cursor: pointer;
+  font-size: 12px;
+  letter-spacing: 0.05em;
+}
+
+.max-button:hover {
+  color: var(--primary-dark);
 }
 
 .loading-spinner {
@@ -350,10 +424,6 @@
     box-shadow: 0 10px 40px var(--shadow);
   }
 
-  .swap-form-card::before {
-    display: none; /* Disable shimmer on mobile for performance */
-  }
-
   .swap-form-header {
     margin-bottom: 24px;
   }
@@ -392,6 +462,24 @@
   .token-input-group {
     flex-direction: column;
     gap: 8px;
+    align-items: center;
+  }
+
+  .token-selector-wrapper {
+    padding-top: 16px;
+    width: auto;
+  }
+
+  .balance-chip.floating {
+    transform: translate(-50%, -120%);
+  }
+
+  .amount-input-wrapper {
+    width: 100%;
+  }
+
+  .max-button {
+    right: 16px;
   }
 
   .token-selector {
@@ -446,6 +534,11 @@
     padding: 14px;
     font-size: 15px;
   }
+
+  .balance-chip {
+    font-size: 11px;
+    padding: 4px 10px;
+  }
 }
 
 /* Landscape mobile */
@@ -464,6 +557,15 @@
 
   .swap-form-header h1 {
     font-size: 26px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .swap-form-card,
+  .submit-button,
+  .swap-icon-button {
+    animation: none;
+    transition: none;
   }
 }
 

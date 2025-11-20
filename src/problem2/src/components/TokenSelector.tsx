@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from 'react'
-import { Token } from '../types'
+import { Token, TokenBalances } from '../types'
+import { formatTokenAmount } from '../utils/format'
 import './TokenSelector.css'
 
 interface TokenSelectorProps {
@@ -8,6 +9,8 @@ interface TokenSelectorProps {
   onTokenSelect: (token: Token | null) => void
   error?: string
   isTopDropdown?: boolean
+  balances?: TokenBalances
+  excludeSymbols?: string[]
 }
 
 const TokenSelector = ({
@@ -16,6 +19,8 @@ const TokenSelector = ({
   onTokenSelect,
   error,
   isTopDropdown = false,
+  balances,
+  excludeSymbols = [],
 }: TokenSelectorProps) => {
   const [isOpen, setIsOpen] = useState(false)
   const [searchQuery, setSearchQuery] = useState('')
@@ -45,23 +50,39 @@ const TokenSelector = ({
       const buttonRect = buttonRef.current.getBoundingClientRect()
       const viewportHeight = window.innerHeight
       const spaceBelow = viewportHeight - buttonRect.bottom - 8 // 8px gap
-      // Subtract extra to make dropdown slightly shorter
-      const calculatedMaxHeight = Math.max(200, spaceBelow - 120)
+      const calculatedMaxHeight = Math.min(380, Math.max(200, spaceBelow - 16))
       setMaxHeight(calculatedMaxHeight)
     } else if (isOpen && isTopDropdown) {
       setMaxHeight(400) // Keep default max-height for top dropdown
     }
   }, [isOpen, isTopDropdown])
 
-  const filteredTokens = tokens.filter((token) =>
-    token.symbol.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    token.name.toLowerCase().includes(searchQuery.toLowerCase())
-  )
+  const filteredTokens = tokens.filter((token) => {
+    const matchesQuery =
+      token.symbol.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      token.name.toLowerCase().includes(searchQuery.toLowerCase())
+
+    if (!matchesQuery) return false
+
+    const isExcluded = excludeSymbols.includes(token.symbol)
+    if (isExcluded && selectedToken?.symbol !== token.symbol) {
+      return false
+    }
+
+    return true
+  })
 
   const handleTokenClick = (token: Token) => {
     onTokenSelect(token)
     setIsOpen(false)
     setSearchQuery('')
+  }
+
+  const getTokenBalance = (symbol: string): string | null => {
+    if (!balances) return null
+    const amount = balances[symbol]
+    if (amount === undefined) return null
+    return `${formatTokenAmount(amount)} ${symbol}`
   }
 
   return (
@@ -124,54 +145,62 @@ const TokenSelector = ({
           </div>
           <div className="token-list">
             {filteredTokens.length > 0 ? (
-              filteredTokens.map((token) => (
-                <button
-                  key={token.symbol}
-                  type="button"
-                  className={`token-option ${
-                    selectedToken?.symbol === token.symbol ? 'selected' : ''
-                  }`}
-                  onClick={() => handleTokenClick(token)}
-                >
-                  <img
-                    src={token.iconUrl}
-                    alt={token.symbol}
-                    className="token-icon"
-                    onError={(e) => {
-                      const target = e.target as HTMLImageElement
-                      target.style.display = 'none'
-                    }}
-                  />
-                  <div className="token-info">
-                    <div className="token-name-group">
-                      <span className="token-symbol">{token.symbol}</span>
-                      <span className="token-name">{token.name}</span>
+              filteredTokens.map((token) => {
+                const tokenBalance = getTokenBalance(token.symbol)
+                return (
+                  <button
+                    key={token.symbol}
+                    type="button"
+                    className={`token-option ${
+                      selectedToken?.symbol === token.symbol ? 'selected' : ''
+                    }`}
+                    onClick={() => handleTokenClick(token)}
+                  >
+                    <img
+                      src={token.iconUrl}
+                      alt={token.symbol}
+                      className="token-icon"
+                      onError={(e) => {
+                        const target = e.target as HTMLImageElement
+                        target.style.display = 'none'
+                      }}
+                    />
+                    <div className="token-info">
+                      <div className="token-name-group">
+                        <span className="token-symbol">{token.symbol}</span>
+                        <span className="token-name">{token.name}</span>
+                      </div>
+                      <div className="token-meta">
+                        {token.price && (
+                          <span className="token-price">
+                            ${token.price.toLocaleString('en-US')}
+                          </span>
+                        )}
+                        {tokenBalance && (
+                          <span className="token-balance">{tokenBalance}</span>
+                        )}
+                      </div>
                     </div>
-                    {token.price && (
-                      <span className="token-price">
-                        ${token.price.toLocaleString('vi-VN')}
-                      </span>
+                    {selectedToken?.symbol === token.symbol && (
+                      <svg
+                        className="check-icon"
+                        width="20"
+                        height="20"
+                        viewBox="0 0 20 20"
+                        fill="none"
+                      >
+                        <path
+                          d="M16.667 5L7.5 14.167L3.333 10"
+                          stroke="currentColor"
+                          strokeWidth="2"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        />
+                      </svg>
                     )}
-                  </div>
-                  {selectedToken?.symbol === token.symbol && (
-                    <svg
-                      className="check-icon"
-                      width="20"
-                      height="20"
-                      viewBox="0 0 20 20"
-                      fill="none"
-                    >
-                      <path
-                        d="M16.667 5L7.5 14.167L3.333 10"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      />
-                    </svg>
-                  )}
-                </button>
-              ))
+                  </button>
+                )
+              })
             ) : (
               <div className="no-tokens">No tokens found</div>
             )}

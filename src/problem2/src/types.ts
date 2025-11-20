@@ -9,15 +9,23 @@ export interface TokenPrice {
   [symbol: string]: number
 }
 
+export type TokenBalances = Record<string, number>
+
 export interface SwapFormData {
   fromToken: Token | null
   toToken: Token | null
   fromAmount: string
-  toAmount: string
 }
 
 export interface ValidationError {
-  field: 'fromToken' | 'toToken' | 'fromAmount' | 'toAmount'
+  field: 'fromToken' | 'toToken' | 'fromAmount'
   message: string
+}
+
+export interface SuccessSwapData {
+  fromAmount: string
+  fromSymbol: string
+  toAmount: string
+  toSymbol: string
 }
 
