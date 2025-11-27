@@ -170,7 +170,8 @@
 
 .token-dropdown.bottom-dropdown {
   z-index: 10000;
-  max-height: 400px;
+  /* Ensure dropdown doesn't overflow viewport */
+  max-height: min(400px, calc(100vh - 100px));
 }
 
 @keyframes slideDown {
@@ -218,8 +219,10 @@
 }
 
 .token-list {
-  max-height: 300px;
+  flex: 1;
+  min-height: 0;
   overflow-y: auto;
+  overflow-x: hidden;
   padding: 8px;
 }
 
@@ -380,12 +383,16 @@
   .token-selector {
     min-width: auto;
     width: auto;
+    display: flex;
+    justify-content: center;
   }
 
   .token-selector-button {
     padding: 10px 12px;
     min-height: 52px;
     border-radius: 14px;
+    width: auto;
+    justify-content: center;
   }
 
   .token-icon-button {
@@ -436,7 +443,12 @@
 
   .token-dropdown.bottom-dropdown {
     min-width: 280px;
-    max-height: 60vh;
+    max-height: min(60vh, calc(100vh - 120px));
+  }
+
+  .token-list {
+    flex: 1;
+    min-height: 0;
   }
 
   .token-option {
@@ -466,9 +478,17 @@
 
 /* Small mobile devices */
 @media (max-width: 375px) {
+  .token-selector {
+    width: auto;
+    display: flex;
+    justify-content: center;
+  }
+
   .token-selector-button {
     padding: 8px 10px;
     min-height: 48px;
+    width: auto;
+    justify-content: center;
   }
 
   .token-icon {
@@ -482,6 +502,45 @@
 
   .token-name {
     font-size: 10px;
+  }
+}
+
+/* Extra small mobile devices (320px) */
+@media (max-width: 320px) {
+  .token-selector {
+    width: auto;
+    display: flex;
+    justify-content: center;
+  }
+
+  .token-selector-button {
+    padding: 8px 12px;
+    min-height: 44px;
+    width: auto;
+    justify-content: center;
+  }
+
+  .token-icon {
+    width: 22px;
+    height: 22px;
+  }
+
+  .token-icon-large {
+    width: 36px;
+    height: 36px;
+  }
+
+  .token-placeholder-icon {
+    width: 36px;
+    height: 36px;
+  }
+
+  .token-symbol {
+    font-size: 12px;
+  }
+
+  .token-name {
+    font-size: 9px;
   }
 }
 

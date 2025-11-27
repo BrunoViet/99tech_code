@@ -46,14 +46,30 @@ const TokenSelector = ({
 
   // Calculate max-height for bottom dropdown based on viewport
   useEffect(() => {
-    if (isOpen && !isTopDropdown && buttonRef.current) {
-      const buttonRect = buttonRef.current.getBoundingClientRect()
-      const viewportHeight = window.innerHeight
-      const spaceBelow = viewportHeight - buttonRect.bottom - 8 // 8px gap
-      const calculatedMaxHeight = Math.min(380, Math.max(200, spaceBelow - 16))
-      setMaxHeight(calculatedMaxHeight)
-    } else if (isOpen && isTopDropdown) {
-      setMaxHeight(400) // Keep default max-height for top dropdown
+    const calculateMaxHeight = () => {
+      if (isOpen && !isTopDropdown && buttonRef.current) {
+        const buttonRect = buttonRef.current.getBoundingClientRect()
+        const viewportHeight = window.innerHeight
+        const spaceBelow = viewportHeight - buttonRect.bottom - 8 // 8px gap
+        // Reserve space for search box (~60px) and padding (~16px)
+        const reservedSpace = 76
+        const calculatedMaxHeight = Math.min(380, Math.max(200, spaceBelow - reservedSpace))
+        setMaxHeight(Math.max(150, calculatedMaxHeight)) // Minimum 150px
+      } else if (isOpen && isTopDropdown) {
+        setMaxHeight(400) // Keep default max-height for top dropdown
+      }
+    }
+
+    calculateMaxHeight()
+
+    // Recalculate on resize and scroll
+    if (isOpen && !isTopDropdown) {
+      window.addEventListener('resize', calculateMaxHeight)
+      window.addEventListener('scroll', calculateMaxHeight, true)
+      return () => {
+        window.removeEventListener('resize', calculateMaxHeight)
+        window.removeEventListener('scroll', calculateMaxHeight, true)
+      }
     }
   }, [isOpen, isTopDropdown])
 
